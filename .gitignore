@@ -47,4 +47,3 @@ htmlcov/
 # Local files
 *.log
 .DS_Store
-test_integration.py
