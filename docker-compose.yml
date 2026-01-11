@@ -16,17 +16,18 @@ services:
       - POSTGRES_USER=marquez
       - POSTGRES_PASSWORD=marquez
 
-  web:
-    image: marquezproject/marquez-web:latest
-    platform: linux/amd64
-    ports:
-      - "3000:3000"
-    depends_on:
-      - marquez
-    environment:
-      - MARQUEZ_HOST=marquez
-      - MARQUEZ_PORT=5000
-      - WEB_PORT=3000
+  # Uncomment to run the Marquez web UI locally
+  # web:
+  #   image: marquezproject/marquez-web:latest
+  #   platform: linux/amd64
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - marquez
+  #   environment:
+  #     - MARQUEZ_HOST=marquez
+  #     - MARQUEZ_PORT=5000
+  #     - WEB_PORT=3000
 
   db:
     image: postgres:14
