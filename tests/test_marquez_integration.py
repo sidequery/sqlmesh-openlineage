@@ -2,16 +2,11 @@
 from __future__ import annotations
 
 import os
-import sys
 import time
 import tempfile
 import shutil
-import subprocess
 import pytest
 import requests
-
-# Add sqlmesh to path for tests
-sys.path.insert(0, "/Users/nico/Code/sqlmesh")
 
 MARQUEZ_API_URL = "http://localhost:5001"
 MARQUEZ_LINEAGE_URL = "http://localhost:5001"

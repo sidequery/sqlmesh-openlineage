@@ -24,7 +24,7 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Run unit tests
-        run: uv run pytest tests/test_console.py tests/test_datasets.py -v
+        run: uv run pytest tests/test_console.py tests/test_datasets.py tests/test_integration.py -v
 
   integration-test:
     runs-on: ubuntu-latest
@@ -83,5 +83,5 @@ jobs:
             sleep 2
           done
 
-      - name: Run integration tests
-        run: uv run pytest tests/test_integration.py tests/test_marquez_integration.py -v -s
+      - name: Run Marquez integration tests
+        run: uv run pytest tests/test_marquez_integration.py -v -s

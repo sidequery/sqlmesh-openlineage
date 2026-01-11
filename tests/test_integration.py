@@ -2,14 +2,10 @@
 from __future__ import annotations
 
 import os
-import sys
 import tempfile
 import shutil
 import pytest
 from unittest.mock import MagicMock, patch
-
-# Add sqlmesh to path for tests
-sys.path.insert(0, "/Users/nico/Code/sqlmesh")
 
 
 class TestOpenLineageIntegration:
