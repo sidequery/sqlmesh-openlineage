@@ -1,0 +1,29 @@
+services:
+  marquez:
+    image: marquezproject/marquez:latest
+    platform: linux/amd64
+    ports:
+      - "5001:5000"
+      - "5002:5001"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MARQUEZ_CONFIG=/usr/src/app/marquez.dev.yml
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=marquez
+      - POSTGRES_USER=marquez
+      - POSTGRES_PASSWORD=marquez
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=marquez
+      - POSTGRES_PASSWORD=marquez
+      - POSTGRES_DB=marquez
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marquez"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run unit tests
+        run: uv run pytest tests/test_console.py tests/test_datasets.py -v
+
+  integration-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: marquez
+          POSTGRES_PASSWORD: marquez
+          POSTGRES_DB: marquez
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      marquez:
+        image: marquezproject/marquez:latest
+        env:
+          MARQUEZ_CONFIG: /usr/src/app/marquez.dev.yml
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: marquez
+          POSTGRES_USER: marquez
+          POSTGRES_PASSWORD: marquez
+        ports:
+          - 5001:5000
+        options: >-
+          --health-cmd "curl -f http://localhost:5000/api/v1/namespaces || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 30s
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Wait for Marquez
+        run: |
+          for i in {1..30}; do
+            curl -s http://localhost:5001/api/v1/namespaces && break
+            echo "Waiting for Marquez..."
+            sleep 2
+          done
+
+      - name: Run integration tests
+        run: uv run pytest tests/test_integration.py tests/test_marquez_integration.py -v -s

@@ -1,0 +1,40 @@
+[project]
+name = "sqlmesh-openlineage"
+version = "0.1.0"
+description = "OpenLineage integration for SQLMesh"
+readme = "README.md"
+requires-python = ">= 3.9"
+license = { text = "MIT" }
+authors = [{ name = "Sidequery" }]
+dependencies = [
+    "sqlmesh>=0.100.0",
+    "openlineage-python>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-mock",
+    "requests",
+    "mypy",
+    "ruff",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sqlmesh_openlineage"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
