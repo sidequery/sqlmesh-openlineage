@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -74,6 +75,7 @@ jobs:
         with:
           password: ${{ secrets.PYPI_TOKEN }}
           print-hash: true
+          skip-existing: true
 
       - name: Commit version bump
         run: |
